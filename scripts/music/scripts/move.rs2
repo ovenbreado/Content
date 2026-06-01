@@ -199,7 +199,9 @@
 [mapzone,0_51_52] @music_playbyregion(coord);
 [mapzone,0_51_53] @music_playbyregion(coord);
 [mapzone,0_51_54] @music_playbyregion(coord);
-[mapzone,0_52_44] @music_playbyregion(coord);
+[mapzone,0_52_44] 
+// ~pyramid_course_mapzone; 
+@music_playbyregion(coord);
 [mapzone,0_52_45] @music_playbyregion(coord);
 [mapzone,0_52_46] @music_playbyregion(coord);
 [mapzone,0_52_47] @music_playbyregion(coord);

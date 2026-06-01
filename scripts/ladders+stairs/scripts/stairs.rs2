@@ -1048,12 +1048,14 @@ switch_coord (loc_coord) {
 [oploc1,agility_pyramid_steps1]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_52_44_26_15 : p_telejump(1_52_44_26_17); 
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,agility_pyramid_steps_top_hotspot]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_52_44_26_15 : p_telejump(0_52_44_26_14); 
     case default : @unhandled_stairs(loc_coord);
 }
 

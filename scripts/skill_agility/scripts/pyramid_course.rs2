@@ -1,0 +1,90 @@
+// Oldest video with the large rockface rather than the current new version.
+// https://youtu.be/Fr4hLYpN-MM
+
+[oploc1,agility_pyramid_climbing_rocks]
+p_arrivedelay;
+if (coordx(coord) < 3346) { // 
+    ~agility_force_move(0, human_climbing_down, movecoord(coord, 6, 0, 0));
+} else {
+    ~agility_force_move(0, human_climbing, movecoord(coord, -6, 0, 0));
+}
+
+// [mapzone,0_52_44]
+[proc,pyramid_course_mapzone]
+walktrigger(agility_area_walktrigger);
+
+[walktrigger,agility_area_walktrigger]
+walktrigger(agility_area_walktrigger);
+if(inzone(1_52_44_26_25, 1_52_44_27_25, coord) = true) {
+    queue(reset_agility_pyramid_tilt_1, 0, 2); // agilityarena_dive_player or agilityarena_land_player
+}
+if(inzone(1_52_44_26_26, 1_52_44_27_26, coord) = true) {
+    queue(reset_agility_pyramid_tilt_1, 0, -2);
+}
+
+[queue,reset_agility_pyramid_tilt_1](int $offset)
+def_int $direction = ^exact_south;
+if ($offset > 0) { 
+    $direction = ^exact_north; 
+}
+sound_synth(jump_no_land, 0, 0);
+%agility_pyramid_tilt_1 = 1;
+~agility_exactmove(agilityarena_dive_player, 0, 1, coord, movecoord(coord, 0, 0, $offset), 15, 30, $direction, false);
+%agility_pyramid_tilt_1 = 0;
+
+
+[oploc1,agility_pyramid_low_wall]
+if(coordz(coord) > coordz(loc_coord)) {
+    def_coord $end_coord = movecoord(coord, 0, 0, -2);
+    ~agility_exactmove(human_lowwall, 0, 0, coord, $end_coord, 0, 144, ^exact_south, true);
+} else {
+    def_coord $end_coord = movecoord(coord, 0, 0, 2);
+    ~agility_exactmove(human_lowwall, 0, 0, coord, $end_coord, 0, 144, ^exact_north, true);
+}
+stat_advance(agility, 50);
+sound_synth(climb_wall, 0, 0);
+
+[oploc1,agility_pyramid_ledge_hotspot]
+p_delay(0);
+def_int $x_dist = -1;
+def_seq $walk_seq = human_walk_sidestep;
+def_seq $end_seq = human_outof_sidestep;
+if(coordx(coord) < coordx(loc_coord)) {
+    $x_dist = 1;
+    $walk_seq = human_walk_sidestepl;
+    $end_seq = human_outof_sidestepl;
+}
+~set_forcemove_bas($walk_seq);
+sound_synth(balancing_ledge, 5, 10);
+~forcemove(movecoord(coord, multiply($x_dist, 5), 0, 0));
+anim($end_seq, 20);
+p_delay(0);
+~update_bas;
+
+[oploc1,agility_pyramid_plank_start] @agility_pyramid_plank;
+[oploc1,agility_pyramid_plank_end] @agility_pyramid_plank;
+[label,agility_pyramid_plank]
+~set_readywalk_bas(human_walk_logbalance_ready, human_walk_logbalance);
+p_delay(0);
+def_int $z_dist = -1;
+if(coordz(coord) < coordz(loc_coord)) {
+    $z_dist = 1;
+}
+sound_synth(plankwalk, 4, 10);
+~forcemove(movecoord(coord, 0, 0, multiply($z_dist, 5)));
+~update_bas;
+stat_advance(agility, 60);
+
+// ~forcemove(movecoord(coord, 5, 0, 0));
+// 1_52_44_35_35
+
+// agility_pyramid_ledge_on_left
+// if(loc_find(1_52_44_26_25, boardgames_barstool_invis) = true) {
+//     loc_change(boardgames_barstool_invis, 1);
+// }
+// loc_anim(ropeswing_long);
+// ~agility_exactmove(human_ropeswing_long, 20, 0, $start_pos, movecoord($start_pos, 0, 0, 5), 45, 70, ^exact_north, false);
+// mes("You skillfully swing across.");
+// sound_synth(swing_across, 0, 0);
+// stat_advance(agility, 200);
+// ~update_wilderness_varp(2);
