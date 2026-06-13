@@ -1,0 +1,45 @@
+[oploc1,route_rowboat_mortton]
+if(%routequest < ^routequest_boatman_repaired) {
+    // todo: should face player
+    ~chatnpc_specific("Cyreg Paddlehorn", route_cyreg_paddlehorn, "<p,angry>Hey, hands off my boat!");
+    if (npc_find(coord, route_cyreg_paddlehorn, 10, 1) = true) {
+        npc_setmode(playerfaceclose);
+    }
+    return;
+}
+~chatnpc_specific("Cyreg Paddlehorn", route_cyreg_paddlehorn, "<p,neutral>It costs 10 gold to cover the loan of the boat. Will you pay?");
+// todo: ring of charos
+switch_int(~p_choice2("Yes, I'll pay ten gold.", 1, "No, I won't use the boat.", 2)) {
+    case 1 :
+        ~chatplayer("Yes, I'll pay ten gold.");
+        if(inv_total(inv, coins) >= 10) {
+            @travel_to_hollow;
+        } else {
+            // OSRS
+            ~chatnpc_specific("Cyreg Paddlehorn", route_cyreg_paddlehorn, "<p,neutral>Sorry, but you don't have that much. No money, no boat!");
+        }
+    case 2 :
+        ~chatplayer("No, I won't use the boat.");
+}
+
+[oploc2,route_rowboat_mortton]
+if(%routequest < ^routequest_boatman_repaired) {
+    ~chatnpc_specific("Cyreg Paddlehorn", route_cyreg_paddlehorn, "<p,angry>Hey, hands off my boat!");
+    return;
+}
+if(inv_total(inv, coins) < 10) {
+    ~chatnpc_specific("Cyreg Paddlehorn", route_cyreg_paddlehorn, "<p,neutral>Sorry my friend. You don't seem to have the funds for the trip. It will cost you 10 gold.");
+    return;
+}
+@travel_to_hollow;
+
+[label,travel_to_hollow]
+// todo: hide stones
+minimap_toggle(2);
+if_openmain(swamp_boatjourney); // [7924]
+if_setanim(swamp_boatjourney:shipmodel, swamp_boatjourney);
+p_delay(13);
+p_teleport(0_54_52_42_52);
+if_close;
+minimap_toggle(0);
+~mesbox("You arrive at the hollows."); // not a typo
